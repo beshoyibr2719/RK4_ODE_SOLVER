@@ -4,6 +4,9 @@
 #include <vector>
 using namespace std;
 
+//Owner: Beshoy Ibrahim
+// Freshman CE at UIC
+
 // create a class
 class ODE
 {
@@ -24,7 +27,7 @@ vector<double> rk4_step(){
     double a = h_/6.0; // RK4 scaling factor
 // vector temp to allow us to change our number of inputs
     vector<double> temp(y_.size());
-// vector sum to be able to get our value at te end of each step
+// vector sum to be able to get our value at the end of each step
     vector<double> sum(y_.size());
 
     // k1 calculation
@@ -67,7 +70,7 @@ vector<double> rk4_step(){
     public:
 // add the constructor
 // creates object and gives it starting values
-    ODE(double t, vector<double>y, double h, int steps, std::function<vector<double>(double, vector<double>)>f ):t_(t), y_(y), h_(h), steps_(steps), f_(f){}
+    ODE(double t, vector<double> y, double h, int steps, std::function<vector<double>(double, vector<double>)>f ):t_(t), y_(y), h_(h), steps_(steps), f_(f){}
 
 // method to continue solving and print does not need to return!
 void solve(){
@@ -101,7 +104,7 @@ int main()
 
     auto my_ode = [g](double t, vector<double>y) -> vector<double>
     {
-        return {y[1], -g};
+        return {y[1], - g};
     };
 
 // create the object!
