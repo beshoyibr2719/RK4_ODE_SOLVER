@@ -13,3 +13,14 @@ Tested with projectile motion under gravity where position and velocity are solv
 
 Why OOP for FPGA?
 Encapsulation gives HLS tools clear boundaries to optimize. Private variables become registers, methods become pipelines, and the clean structure maximizes parallelization on hardware.
+
+## Project Status
+Currently working on making the RK4 solver fully compatible with 
+Vitis HLS for deployment on the PYNQ Z-2 FPGA board. The software 
+version is fully functional and verified. The HLS version is in 
+active development as part of ongoing freshman research.
+
+## Repository Structure
+- `classODE.cpp` — Full featured OOP RK4 solver (software version)
+- `ODE_HLS.cpp` — HLS compatible version for FPGA deployment (in progress)
+- `README.md` — Project documentation
