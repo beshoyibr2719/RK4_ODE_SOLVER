@@ -1,13 +1,19 @@
-#include "ap_fixed.h"
+// for HLS later in Vitis! #include "ap_int.h"
 #include <math.h>
-
+#include "ODE_HLS.h"
 double f(double t, double y)
 {
+// tells HLS to copy this function's logic directly into the calling function
+// making it so we do not have to create a seperate hardware block every time!
+    #pragma HLS INLINE
     return y - t*t + 1;
 }
-
 double rk4_step(double t, double y, double h)
-{
+    {
+// allows us to work on multiple calls of rk4_step simultaneously.
+    #pragma HLS PIPELINE
+
+        
     double z = h/2.0;
     double x = t + z;
     double k1 = f(t, y);
@@ -20,20 +26,4 @@ double rk4_step(double t, double y, double h)
     sum += (a*2) * k3;
     sum += a * k4;
     return sum;
-}
-
-int main()
-{
-    double t = 0.0;
-    double y = 0.5;
-    double h = 0.1;
-    int steps = 20;
-
-    for(int i = 0; i < steps; i++)
-    {
-        std::cout << "t = " << t << ", y = " << y << std::endl;
-        y = rk4_step(t, y, h);
-        t += h;
-    }
-    return 0;
-}
+ }
