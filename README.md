@@ -1,9 +1,9 @@
-I built this project as part of my freshman year research work, where I am exploring how numerical methods can be accelerated on FPGAs using High Level Synthesis (HLS).
+I am contiuning to build this project as part of my freshman year research work, where I am exploring how numerical methods can be accelerated on FPGAs using High Level Synthesis (HLS).
 
-What it does
+What it does?
 This is a C++ implementation of the Runge-Kutta 4th Order (RK4) method for solving systems of ordinary differential equations (ODEs). Instead of a basic procedural approach, I designed it using OOP principles so it is able to map cleanly onto FPGA hardware through HLS tools like Vitis HLS in the future.
 
-What I learned building this
+What I have learned while building this!
 How to design flexible C++ classes with private state and public methods
 Using lambda functions to pass any ODE equation into the solver
 Extending scalar solvers to handle full systems of ODEs with vector state
@@ -22,5 +22,7 @@ active development as part of ongoing freshman research.
 
 ## Repository Structure
 - `classODE.cpp` — Full featured OOP RK4 solver (software version)
-- `ODE_HLS.cpp` — HLS compatible version for FPGA deployment (in progress)
+- `ODE_HLS.cpp` — HLS compatible version for FPGA deployment
 - `README.md` — Project documentation
+- `classODE_HLS.cpp` — HLS compatible version for FPGA deployment for a system of ODEs (in progress)
+- `classODE_HLStb.cpp` — test bench for system of ODEs version
