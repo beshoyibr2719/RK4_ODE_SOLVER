@@ -44,7 +44,7 @@ structure maximizes parallelization on hardware.
 - [x] Bitstream generated and deployed to PYNQ-Z2
 - [x] AXI-Lite register communication working from Jupyter notebook
 - [x] Hardware output verified: x=5.1, v=0.2 matches software result
-- [ ] Performance benchmarking vs CPU implementation
+- [x] Performance benchmarking vs CPU implementation(64x speedup at 10000 steps)
 - [ ] Scaling to larger ODE systems
 - [ ] Timing closure (currently -0.09ns slack)
 
@@ -71,6 +71,25 @@ Files needed to run on PYNQ:
 - `rk4_ode.bit` — bitstream file
 - `rk4_ode.hwh` — hardware handoff file
 - `ODE Accelerator.ipynb` — Jupyter notebook
+
+## Performance Benchmarks
+
+CPU (Python RK4 on ARM) vs FPGA (HLS IP on Zynq fabric), 
+same inputs, same board.
+
+| Steps | CPU time | FPGA time | Speedup |
+|-------|----------|-----------|---------|
+| 10    | 1.87 ms  | 1.95 ms   | ~1x     |
+| 1000  | 59.7 ms  | 2.6 ms    | ~23x    |
+| 10000 | 561 ms   | 8.7 ms    | ~64x    |
+
+At small step counts AXI-Lite communication overhead dominates 
+and both are roughly equal. As computation scales up the FPGA 
+pulls significantly ahead — 64x faster at 10,000 steps.
+
+This gap will grow further with Hodgkin-Huxley (4 coupled 
+equations) where the FPGA can exploit parallelism across all 
+4 state variables simultaneously.
 
 ## Repository Structure
 - `classODE.cpp` — Full featured OOP RK4 solver (software version)
