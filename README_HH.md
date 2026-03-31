@@ -56,20 +56,32 @@ ENa=115.0, EK=-12.0, EL=10.6
 Initial conditions: t0=0.0, dt=0.01, steps=1000, V0=0.0, 
 n0=0.317, m0=0.05, h0=0.6
 
-Output: V=2.53998, n=0.304944, m=0.0692, h=0.699746 ✓ C simulation passing
+Output: V=2.54037, n=0.304943, m=0.0692027, h=0.699744 ✓ C simulation passing
 
 All 4 state variables evolved correctly over time confirming the 
 H-H equations are implemented correctly.
 
+Phase 2: AXI-Stream Integration
+To support real-time neural plotting, the top-level interface was refactored from AXI-Lite pointers to an AXI4-Stream (AXIS). This allows the FPGA to "push" voltage data points to the ARM processor for every simulation step without waiting for the entire loop to finish.
+
+Control Interface: AXI-Lite (Scalar parameters)
+
+Data Interface: AXI-Stream (Continuous Voltage samples)
+
+
+
 ## HLS Optimization Trials
 
-| Trial | Pragmas | DSP | FF | LUT | Timing Met? |
-|-------|---------|-----|----|-----|-------------|
-| Baseline | None | 561 | 42,779 | 67,053 | No (-1.16ns) |
-| Pipeline in solve() | HLS PIPELINE | 561 | 42,906 | 66,869 | No (-1.16ns) |
-| Unroll in k loops | HLS UNROLL | 279 | 21,991 | 34,716 | No (-1.31ns) |
-| Pipeline on ode_func | HLS PIPELINE | 561 | 42,779 | 67,053 | No (-1.16ns) |
-| Both | UNROLL + PIPELINE | 561 | 42,617 | 66,961 | No (-1.16ns) |
+Trial	Pragmas	DSP	FF	LUT	Timing Slack	II
+Baseline	Stream Only	344	26,873	43,281	-1.12ns	--
+Pipelined	Pipeline (Solve)	344	26,917	43,210	-1.12ns	5
+Unrolled	Unroll (k-steps)	344	26,917	43,210	-1.12ns	5
+Partitioned	Array Partition	344	26,917	43,210	-1.16ns	5
+
+
+NEW FINDINGS USING STREAM APPROACH:
+
+Switching to AXI-Stream revealed a compute-bound bottleneck. The hls::exp() functions in the ode_func limit the Initiation Interval (II) to 5, as DSP resources are shared across the sequential ODE steps.
 
 KEY FINDINGS: UNROLL on the k loops in rk4_step is the best pragma 
 combination — cuts DSP usage in half and reduces FF and LUT by almost 
@@ -84,15 +96,16 @@ gives HLS more parallelism to exploit.
 
 ## Project Status
 
-- [x] C simulation passing
-- [x] C synthesis complete — optimization trials done
+- [x] C simulation passing (Updated for Stream)
+- [x] C synthesis complete (Streaming Architecture)
 - [x] Best pragma combination identified — UNROLL on k loops
+- [x] Phase 2 Refactor (AXI-Stream Implementation)
 - [ ] IP packaging
 - [ ] Vivado block design
 - [ ] Bitstream generated and deployed to PYNQ-Z2
 - [ ] Hardware output verified
 - [ ] Performance benchmarking vs CPU
-- [ ] Timing closure (currently -1.16ns slack)
+- [ ] Timing closure (currently -1.12ns slack)
 
 ## Repository Structure
 
